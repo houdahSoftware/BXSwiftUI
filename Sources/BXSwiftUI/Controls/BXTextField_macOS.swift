@@ -2,7 +2,7 @@
 //
 //  BXTextField_macOS.swift
 //	SwiftUI wrapper for NSTextField with custom behavior
-//  Copyright ©2020 Peter Baumgartner. All rights reserved.
+//  Copyright ©2020-2023 Peter Baumgartner. All rights reserved.
 //
 //**********************************************************************************************************************
 
@@ -11,6 +11,7 @@
 
 import SwiftUI
 import AppKit
+import BXSwiftUtils
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -55,14 +56,14 @@ public struct BXTextFieldWrapper<T> : NSViewRepresentable
 
 	// The control size is provided by the environment. needs to be converted to NSControl datatype
 	
-	private var macControlSize:NSControl.ControlSize
+	private var NSControlSize:NSControl.ControlSize
 	{
 		switch controlSize
 		{
 			case .regular: 		return .regular
 			case .small: 		return .small
 			case .mini: 		return .mini
-			default: 			return .regular
+			default: 			return .small
 		}
 	}
 
@@ -112,8 +113,9 @@ public struct BXTextFieldWrapper<T> : NSViewRepresentable
 		
         let textfield = BXTextFieldNative(frame:.zero)
         textfield.delegate = context.coordinator
-        textfield.controlSize = self.macControlSize
-        textfield.alignment = alignment.nstextalignment
+        textfield.controlSize = self.NSControlSize
+       	textfield.font = NSFont.systemFont(ofSize:NSFont.systemFontSize(for:textfield.controlSize))
+    	textfield.alignment = alignment.nstextalignment
         textfield.formatter = formatter
         textfield.fixedHeight = self.height
 		textfield.target = context.coordinator
@@ -176,6 +178,10 @@ public struct BXTextFieldWrapper<T> : NSViewRepresentable
 		}
 		
 		textfield.isEnabled = context.environment.isEnabled
+
+		let size = self.NSControlSize
+    	textfield.controlSize = size
+        textfield.font = NSFont.systemFont(ofSize:NSFont.systemFontSize(for:size))
 
 		// Call statusHandler so that clients can update the appearance of the view accordingly
 		
@@ -285,7 +291,9 @@ public class BXTextFieldNative : NSTextField, NSTextViewDelegate
 	var fixedHeight:CGFloat? = nil
 	var selectAllOnMouseDown = true
 	var allowSpaceKey = false
-
+	
+	private var observers:[Any] = []
+	
 
 //----------------------------------------------------------------------------------------------------------------------
 
@@ -315,6 +323,11 @@ public class BXTextFieldNative : NSTextField, NSTextViewDelegate
 		let trackingArea = NSTrackingArea(rect:self.bounds, options:[.mouseEnteredAndExited,.activeAlways], owner:self, userInfo:nil)
 		self.addTrackingArea(trackingArea)
 		self.trackingArea = trackingArea
+		
+		self.observers += NotificationCenter.default.publisher(for:BXTextField_commit).sink
+		{
+			[weak self] _ in self?.commit()
+		}
 	}
 	
 	func cleanup()
@@ -413,6 +426,14 @@ public class BXTextFieldNative : NSTextField, NSTextViewDelegate
 		}
 		
 		return true
+	}
+	
+	/// Commits any unsaved changes by resigning first responder status
+	
+	private func commit()
+	{
+		guard let window = self.window else { return }
+		window.makeFirstResponder(nil)
 	}
 }
 

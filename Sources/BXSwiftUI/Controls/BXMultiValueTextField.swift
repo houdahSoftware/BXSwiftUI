@@ -56,14 +56,14 @@ public struct BXMultiValueTextField<T:Hashable> : NSViewRepresentable where T:Ty
 	
 	// Appearance
 	
-	private var macControlSize:NSControl.ControlSize
+	private var NSControlSize:NSControl.ControlSize
 	{
 		switch controlSize
 		{
 			case .regular: 		return .regular
 			case .small: 		return .small
 			case .mini: 		return .mini
-			default: 	return .regular
+			default: 			return .small
 		}
 	}
 
@@ -87,14 +87,17 @@ public struct BXMultiValueTextField<T:Hashable> : NSViewRepresentable where T:Ty
         textfield.delegate = context.coordinator
         textfield.alignment = alignment.nstextalignment
         textfield.formatter = formatter
-        textfield.controlSize = self.macControlSize
-        textfield.fixedHeight = self.height
+    	textfield.fixedHeight = self.height
 		textfield.target = context.coordinator
 		textfield.action = action
 		textfield.selectAllOnMouseDown = self.selectAllOnMouseDown
 		textfield.allowSpaceKey = self.allowSpaceKey
 		textfield.statusHandler = self.statusHandler
 		
+		let size = self.NSControlSize
+    	textfield.controlSize = size
+        textfield.font = NSFont.systemFont(ofSize:NSFont.systemFontSize(for:size))
+
 		textfield.notify()
 
 		return textfield
@@ -141,6 +144,10 @@ public struct BXMultiValueTextField<T:Hashable> : NSViewRepresentable where T:Ty
 			textfield.placeholderString = "Multiple"
 			textfield.isEnabled = self.isEnabled
 		}
+
+		let size = self.NSControlSize
+    	textfield.controlSize = size
+        textfield.font = NSFont.systemFont(ofSize:NSFont.systemFontSize(for:size))
 
 		textfield.notify()
     }

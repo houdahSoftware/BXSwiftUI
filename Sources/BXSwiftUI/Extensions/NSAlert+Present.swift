@@ -16,24 +16,44 @@ import AppKit
 
 public extension NSAlert
 {
-	class func presentModal(style:NSAlert.Style = .informational, title:String, message:String, okButton:String = "OK", cancelButton:String? = nil, appearance:NSAppearance? = nil, okHandler:(()->Void)? = nil)
+	/// Convenience function to show a modal alert with the specified arguments
+	
+	class func presentModal(style:NSAlert.Style = .informational, title:String, message:String, okButton:String = "OK", cancelButton:String? = nil, suppressionKey:String? = nil, appearance:NSAppearance? = nil, okHandler:(()->Void)? = nil)
 	{
-		let alert = NSAlert()
+		// Bail out if the user clicked on the "Don't show again" checkbox
 		
+		if let suppressionKey = suppressionKey, UserDefaults.standard.bool(forKey:suppressionKey)
+		{
+			return
+		}
+
+		// Create the alert
+		
+		let alert = NSAlert()
     	alert.alertStyle = style
 		alert.window.appearance = appearance
 		alert.messageText = title
 		alert.informativeText = message
 		alert.addButton(withTitle:okButton)
+		alert.showsSuppressionButton = suppressionKey != nil
 		
 		if let cancelButton = cancelButton
 		{
 			alert.addButton(withTitle:cancelButton)
 		}
 		
+		// Show modal alert
+		
 		if alert.runModal() == NSApplication.ModalResponse.alertFirstButtonReturn
 		{
 			okHandler?()
+		}
+		
+		// If the user clicked on the suppression checkbox, then store info in prefs
+		
+		if let suppressionKey = suppressionKey, let checkbox = alert.suppressionButton, checkbox.state == .on
+		{
+			UserDefaults.standard.set(true, forKey:suppressionKey)
 		}
 	}
 }
