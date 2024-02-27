@@ -25,7 +25,7 @@ let package = Package(
 	
     dependencies:
     [
-        .package(url:"git@github.com:houdahSoftware/BXSwiftUtils.git", .branch("master")),
+        .package(url:"git@github.com:houdahSoftware/BXSwiftUtils.git", .branch("spm")),
     ],
     
 	// Targets are the basic building blocks of a package. A target can define a module or a test suite.
