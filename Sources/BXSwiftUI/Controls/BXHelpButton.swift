@@ -57,7 +57,7 @@ public struct BXHelpButton : View
 			case .small: return 14
 			case .regular: return 20
 			case .large: return 24
-			case .extraLarge:return 28
+//			case .extraLarge:return 28
 			@unknown default: return 20
 		}
 	}
