@@ -8,6 +8,7 @@
 
 
 import SwiftUI
+import BXSwiftUtils
 
 #if canImport(AppKit)
 import AppKit
@@ -134,10 +135,15 @@ public extension NSMenu
 					item.isHidden = false
 					item.tag = -1
 					menu.addItem(item)
+					
+					if name.contains("[AI]")
+					{
+						item.attributedTitle = NSAttributedString(with:name)
+					}
 						
 				// Add a regular menu item
 					
-				case .regular(let icon,let title, let value, let isEnabled, let representedObject):
+				case .regular(let icon, let title, let value, let isEnabled, let representedObject):
 				
 					item = NSMenuItem(title:title, action:nil, keyEquivalent:"")
 					item.image = icon
@@ -145,7 +151,12 @@ public extension NSMenu
 					item.representedObject = representedObject
 					item.isEnabled = isEnabled()
 					menu.addItem(item)
-				
+
+					if title.contains("[AI]")
+					{
+						item.attributedTitle = NSAttributedString(with:title)
+					}
+
 				// Add a section name (disabled)
 				
 				case .section(let title):
@@ -169,8 +180,8 @@ public extension NSMenu
 	}
 }
 
-#endif
-
 
 //----------------------------------------------------------------------------------------------------------------------
 
+
+#endif

@@ -29,13 +29,19 @@ public struct BXProgressView : View
 		
 		VStack(alignment:.leading, spacing:4)
 		{
+			// Title
+			
 			Text(title)
 				.lineLimit(1)
-				
+			
+			// Progress Bar
+			
 			HStack
 			{
 				BXProgressBar(isIndeterminate:controller.isIndeterminate, value:controller.fraction, minValue:0, maxValue:1)
 				
+					.id(controller.isIndeterminate) // WORKAROUND: Since switching isIndeterminate on/off doesn't work for some reason, we'll simply use id to completely replace the NSProgressIndicator instance with a new one when the value of isIndeterminate changes. Now we get to see the animation!
+					
 				if let cancelHandler = BXProgressViewController.cancelHandler
 				{
 					Button(action:cancelHandler)
@@ -45,6 +51,8 @@ public struct BXProgressView : View
 					.buttonStyle(.borderless)
 				}
 			}
+			
+			// Detail Message
 			
 			Text(message)
 				.font(.caption)

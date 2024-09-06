@@ -65,8 +65,16 @@ open class BXProgressWindowController : NSWindowController
 		window.isMovableByWindowBackground = true
 		window.collectionBehavior.insert(.fullScreenAuxiliary)
 		window.contentViewController = BXProgressViewController(nibName:nil, bundle:nil)
-
+		window.isFloatingPanel = true
+		
 		self.window = window
+		
+		// Now that window and view is avaiable, assign previously stored values
+		
+		self.viewController?.progressTitle = self.title
+		self.viewController?.progressMessage = self.message
+		self.viewController?.fraction = self.value
+		self.viewController?.isIndeterminate = self.isIndeterminate
 	}
 	
 
@@ -158,7 +166,16 @@ open class BXProgressWindowController : NSWindowController
 	{
 		DispatchQueue.main.asyncIfNeeded
 		{
+			// Close window
+			
 			self.close()
+			
+			// Reset values
+			
+			self.title = ""
+			self.message = ""
+			self.isIndeterminate = false
+			self.value = 0
 		}
 	}
 
