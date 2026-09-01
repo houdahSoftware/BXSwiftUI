@@ -148,18 +148,15 @@ open class BXProgressWindowController : NSWindowController
 
 	// MARK: -
 	
-	open func show()
+	open func show(appearance:NSAppearance? = nil)
 	{
-		DispatchQueue.main.async
+		DispatchQueue.main.asyncIfNeeded
 		{
 			guard let window = self.window else { return }
 			
+			self.window?.appearance = appearance
 			window.center()
 			window.makeKeyAndOrderFront(nil)
-
-//			let session = NSApp.beginModalSession(for:window)
-//			NSApp.runModalSession(session)
-//			self.modalSession = session
 		}
 	}
 	
@@ -183,11 +180,6 @@ open class BXProgressWindowController : NSWindowController
 
 	override open func close()
 	{
-//		if let session = self.modalSession
-//		{
-//			NSApp.endModalSession(session)
-//		}
-		
 		super.close()
 		self.unloadWindow()
 	}
@@ -196,7 +188,6 @@ open class BXProgressWindowController : NSWindowController
 	{
 		self.contentViewController = nil
 		self.window = nil
-//		self.modalSession = nil
 	}
 }
 
