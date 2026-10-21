@@ -6,12 +6,13 @@ import PackageDescription
 let package = Package(
 
     name: "BXSwiftUI",
-//    defaultLocalization: "en",
+    defaultLocalization: "en",
     
     platforms:
     [
-		.macOS("10.15.2"),
-		.iOS("13.2")
+		// Must match BXSwiftUI.xcconfig, and must not be lower than the BXSwiftUtils package
+		.macOS(.v12),
+		.iOS(.v14)
     ],
     
 	// Products define the executables and libraries a package produces, and make them visible to other packages
@@ -25,7 +26,7 @@ let package = Package(
 	
     dependencies:
     [
-        .package(url:"git@github.com:boinx/BXSwiftUtils.git", .branch("master")),
+        .package(url:"https://github.com/boinx/BXSwiftUtils.git", .branch("master")),
     ],
     
 	// Targets are the basic building blocks of a package. A target can define a module or a test suite.
@@ -33,6 +34,11 @@ let package = Package(
 
     targets:
     [
-        .target(name:"BXSwiftUI", dependencies:["BXSwiftUtils"]),
+        .target(name:"BXSwiftUI", dependencies:["BXSwiftUtils"], resources:
+        [
+            .process("Controls/BXImage.xcassets"),
+            .process("Extensions/NSCursor+Custom.xcassets"),
+            .process("Misc/BXMenuItemSpec.xcstrings"),
+        ]),
     ]
 )

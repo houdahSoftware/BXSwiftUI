@@ -2,7 +2,7 @@
 //
 //  BXMultiValueNativeSlider.swift
 //	SwiftUI wrapper for a NSSlider that supports multiple values
-//  Copyright ©2020 Peter Baumgartner. All rights reserved.
+//  Copyright ©2020-2026 Peter Baumgartner. All rights reserved.
 //
 //**********************************************************************************************************************
 
@@ -235,10 +235,64 @@ class NSMultiValueSliderCell : NSSliderCell
 		NSGraphicsContext.restoreGraphicsState()
 	}
 	
+	// A drag of the slider must be ONE undo step. AppKit's automatic grouping by event would do that, because the run
+	// loop stays in event tracking mode during the drag - but the action of this slider calls
+	// DispatchQueue.main.executeScheduledBlocks() for each change, which runs the run loop in default mode, and that
+	// closes the automatic undo group. Every single step of the drag then became its own undo step.
+	//
+	// So the drag gets an explicit undo group instead, and the automatic grouping is switched off meanwhile: otherwise
+	// beginUndoGrouping() would first open an automatic group around it, and the default mode run loop pass would close
+	// the WRONG one of the two. It is switched back on when tracking stops, still within the same event, so an automatic
+	// group that was already open when the drag started is closed as usual at the end of the event.
+	
+	private var isGroupingUndo = false
+	private var didSuspendGroupsByEvent = false
+	
+	override open func startTracking(at startPoint:NSPoint, in controlView:NSView) -> Bool
+	{
+		if let undoManager = self.undoManager, !self.isGroupingUndo
+		{
+			if undoManager.groupsByEvent
+			{
+				undoManager.groupsByEvent = false
+				self.didSuspendGroupsByEvent = true
+			}
+			
+			undoManager.beginUndoGrouping()
+			self.isGroupingUndo = true
+		}
+		
+		let isTracking = super.startTracking(at:startPoint, in:controlView)
+		
+		// Without tracking there may be no stopTracking(…) either, so the group must not stay open
+		
+		if !isTracking
+		{
+			self.endUndoGroupingIfNeeded()
+		}
+		
+		return isTracking
+	}
+	
 	override open func stopTracking(last:NSPoint, current:NSPoint, in view:NSView, mouseIsUp:Bool)
 	{
 		super.stopTracking(last:last, current:current, in:view, mouseIsUp:mouseIsUp)
 		self.undoManager?.setActionName(undoName)
+		self.endUndoGroupingIfNeeded()
+	}
+	
+	private func endUndoGroupingIfNeeded()
+	{
+		guard self.isGroupingUndo else { return }
+		
+		self.undoManager?.endUndoGrouping()
+		self.isGroupingUndo = false
+		
+		if self.didSuspendGroupsByEvent
+		{
+			self.undoManager?.groupsByEvent = true
+			self.didSuspendGroupsByEvent = false
+		}
 	}
 }
 
