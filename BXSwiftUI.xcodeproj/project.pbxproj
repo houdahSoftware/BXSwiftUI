@@ -135,6 +135,7 @@
 		D08C37342B1B5259001A43A2 /* View+identifiableBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D08C37332B1B5259001A43A2 /* View+identifiableBackgroundView.swift */; };
 		D09F92E62858D0B5008DAC15 /* BXScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09F92E52858D0B4008DAC15 /* BXScrollView.swift */; };
 		D0AB77000000000000000004 /* Formatter+CustomTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0AB77000000000000000001 /* Formatter+CustomTests.swift */; };
+		ABFD86DFF402C0CD67FC49FF /* BXMultiValueNativeSlider-Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45F0860F70329CCA9D799A3D /* BXMultiValueNativeSlider-Tests.swift */; };
 		D0AB77000000000000000005 /* BXSwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D002FE6723D22945002CF0A1 /* BXSwiftUI.framework */; };
 		D0AB77000000000000000006 /* BXSwiftUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0793E8923D469870069327F /* BXSwiftUtils.framework */; };
 		D0BD92CD28E33CDB0063D029 /* BXToggle.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BD92CC28E33CDB0063D029 /* BXToggle.swift */; };
@@ -291,6 +292,7 @@
 		D09F1B1C27A5972400097FA9 /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		D09F92E52858D0B4008DAC15 /* BXScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BXScrollView.swift; sourceTree = "<group>"; };
 		D0AB77000000000000000001 /* Formatter+CustomTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Formatter+CustomTests.swift"; sourceTree = "<group>"; };
+		45F0860F70329CCA9D799A3D /* BXMultiValueNativeSlider-Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BXMultiValueNativeSlider-Tests.swift"; sourceTree = "<group>"; };
 		D0AB77000000000000000002 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D0AB77000000000000000003 /* BXSwiftUI-Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "BXSwiftUI-Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0BD92CC28E33CDB0063D029 /* BXToggle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BXToggle.swift; sourceTree = "<group>"; };
@@ -561,9 +563,18 @@
 			isa = PBXGroup;
 			children = (
 				D0AB77000000000000000002 /* Info.plist */,
+				B63BDDF19F043A48BE9BA524 /* Controls */,
 				D0AB77000000000000000008 /* Extensions */,
 			);
 			path = Tests;
+			sourceTree = "<group>";
+		};
+		B63BDDF19F043A48BE9BA524 /* Controls */ = {
+			isa = PBXGroup;
+			children = (
+				45F0860F70329CCA9D799A3D /* BXMultiValueNativeSlider-Tests.swift */,
+			);
+			path = Controls;
 			sourceTree = "<group>";
 		};
 		D0AB77000000000000000008 /* Extensions */ = {
@@ -821,6 +832,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D0AB77000000000000000004 /* Formatter+CustomTests.swift in Sources */,
+				ABFD86DFF402C0CD67FC49FF /* BXMultiValueNativeSlider-Tests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
